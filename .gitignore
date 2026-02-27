@@ -1,0 +1,5 @@
+node_modules/
+*.exe
+data.json
+hospital_data.json
+.env

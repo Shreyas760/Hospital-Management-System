@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hospital Management System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 font-sans">
+    <div class="container mx-auto p-4">
+        <h1 class="text-3xl font-bold text-center mb-6">Hospital Management System</h1>
+
+        <!-- Tabs for Navigation -->
+        <div class="flex justify-center space-x-4 mb-6">
+            <button onclick="showSection('patients')" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Patients</button>
+            <button onclick="showSection('doctors')" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Doctors</button>
+            <!-- <button onclick="undoAction()" class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">Undo Last Action</button> -->
+        </div>
+
+        <!-- Patients Section -->
+        <div id="patients" class="section">
+            <h2 class="text-2xl font-semibold mb-4">Manage Patients</h2>
+            <!-- Add Patient Form -->
+            <div class="bg-white p-4 rounded shadow mb-6">
+                <h3 class="text-xl font-medium mb-2">Add Patient</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <input id="patientId" type="number" placeholder="Patient ID" class="p-2 border rounded">
+                    <input id="patientName" type="text" placeholder="Name" class="p-2 border rounded">
+                    <input id="patientAge" type="number" placeholder="Age" class="p-2 border rounded">
+                    <input id="patientContact" type="text" placeholder="Contact Number" class="p-2 border rounded">
+                    <input id="patientBloodGroup" type="text" placeholder="Blood Group" class="p-2 border rounded">
+                    <input id="patientReason" type="text" placeholder="Reason for Visit" class="p-2 border rounded">
+                </div>
+                <button onclick="addPatient()" class="mt-4 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">Add Patient</button>
+            </div>
+
+            <!-- Update Patient Form -->
+            <div class="bg-white p-4 rounded shadow mb-6">
+                <h3 class="text-xl font-medium mb-2">Update Patient</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <input id="updatePatientId" type="number" placeholder="Patient ID" class="p-2 border rounded">
+                    <input id="updatePatientName" type="text" placeholder="New Name" class="p-2 border rounded">
+                    <input id="updatePatientAge" type="number" placeholder="New Age" class="p-2 border rounded">
+                </div>
+                <button onclick="updatePatient()" class="mt-4 px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600">Update Patient</button>
+            </div>
+
+            <!-- Delete Patient -->
+            <div class="bg-white p-4 rounded shadow mb-6">
+                <h3 class="text-xl font-medium mb-2">Delete Patient</h3>
+                <input id="deletePatientId" type="number" placeholder="Patient ID" class="p-2 border rounded">
+                <button onclick="deletePatient()" class="mt-4 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">Delete Patient</button>
+            </div>
+
+            <!-- Recommend Doctor -->
+            <div class="bg-white p-4 rounded shadow mb-6">
+                <h3 class="text-xl font-medium mb-2">Recommend Doctor</h3>
+                <input id="recommendReason" type="text" placeholder="Reason for Visit" class="p-2 border rounded w-full">
+                <button onclick="recommendDoctor()" class="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Recommend Doctor</button>
+                <div id="recommendedDoctors" class="mt-4 max-h-96 overflow-y-auto border-t pt-2"></div>
+            </div>
+
+            <!-- View Patients -->
+            <div class="bg-white p-4 rounded shadow">
+                <h3 class="text-xl font-medium mb-2">View Patients</h3>
+                <div class="flex space-x-2 mb-4">
+                    <button onclick="viewPatients()" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">View All Patients</button>
+                    <!-- <button onclick="viewSortedPatients()" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">View Sorted Patients</button> -->
+                </div>
+                <div id="patientsList" class="mt-4 max-h-96 overflow-y-auto border-t pt-2"></div>
+            </div>
+        </div>
+
+        <!-- Doctors Section -->
+        <div id="doctors" class="section hidden">
+            <h2 class="text-2xl font-semibold mb-4">Manage Doctors</h2>
+            <!-- Add Doctor Form -->
+            <div class="bg-white p-4 rounded shadow mb-6">
+                <h3 class="text-xl font-medium mb-2">Add Doctor</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <input id="doctorId" type="number" placeholder="Doctor ID" class="p-2 border rounded">
+                    <input id="doctorName" type="text" placeholder="Name" class="p-2 border rounded">
+                    <input id="doctorContact" type="text" placeholder="Contact" class="p-2 border rounded">
+                    <input id="doctorSpecialty" type="text" placeholder="Specialty" class="p-2 border rounded">
+                </div>
+                <button onclick="addDoctor()" class="mt-4 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">Add Doctor</button>
+            </div>
+
+            <!-- Delete Doctor -->
+            <div class="bg-white p-4 rounded shadow mb-6">
+                <h3 class="text-xl font-medium mb-2">Delete Doctor</h3>
+                <input id="deleteDoctorId" type="number" placeholder="Doctor ID" class="p-2 border rounded">
+                <button onclick="deleteDoctor()" class="mt-4 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">Delete Doctor</button>
+            </div>
+
+            <!-- View Doctors -->
+            <div class="bg-white p-4 rounded shadow">
+                <h3 class="text-xl font-medium mb-2">View Doctors</h3>
+                <button onclick="viewDoctors()" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">View All Doctors</button>
+                <div id="doctorsList" class="mt-4 max-h-96 overflow-y-auto border-t pt-2"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Show/hide sections
+        function showSection(sectionId) {
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.add('hidden');
+            });
+            document.getElementById(sectionId).classList.remove('hidden');
+        }
+
+        // API base URL
+        const API_URL = 'http://localhost:3000/api';
+
+        // Add Patient
+        async function addPatient() {
+            const patient = {
+                id: parseInt(document.getElementById('patientId').value),
+                name: document.getElementById('patientName').value,
+                age: parseInt(document.getElementById('patientAge').value),
+                contact: document.getElementById('patientContact').value,
+                bloodGroup: document.getElementById('patientBloodGroup').value,
+                reason: document.getElementById('patientReason').value
+            };
+            try {
+                const response = await fetch(`${API_URL}/patients`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(patient)
+                });
+                const result = await response.json();
+                alert(result.message || 'Patient Added');
+                viewPatients(); // Auto-refresh patient list
+            } catch (error) {
+                alert('Error adding patient: ' + error.message);
+            }
+        }
+
+        // View Patients
+        async function viewPatients() {
+            const list = document.getElementById('patientsList');
+            list.innerHTML = '<div class="p-2 text-gray-500">Loading...</div>';
+            try {
+                const response = await fetch(`${API_URL}/patients`);
+                const patients = await response.json();
+                list.innerHTML = patients.length ? patients.map(p => `
+                    <div class="p-2 border-b">
+                        ID: ${p.id}, Name: ${p.name}, Age: ${p.age}, Contact: ${p.contact}, 
+                        Blood Group: ${p.bloodGroup}, Reason: ${p.reason}
+                    </div>
+                `).join('') : '<div class="p-2 text-gray-500">No patients found.</div>';
+                document.getElementById('patientsList').scrollIntoView({ behavior: 'smooth' });
+            } catch (error) {
+                list.innerHTML = '<div class="p-2 text-red-500">Error fetching patients.</div>';
+                alert('Error fetching patients: ' + error.message);
+            }
+        }
+
+        // View Sorted Patients
+        async function viewSortedPatients() {
+            const list = document.getElementById('patientsList');
+            list.innerHTML = '<div class="p-2 text-gray-500">Loading...</div>';
+            try {
+                const response = await fetch(`${API_URL}/patients/sorted`);
+                const patients = await response.json();
+                list.innerHTML = patients.length ? patients.map(p => `
+                    <div class="p-2 border-b">
+                        ID: ${p.id}, Name: ${p.name}, Age: ${p.age}, Contact: ${p.contact}, 
+                        Blood Group: ${p.bloodGroup}, Reason: ${p.reason}
+                    </div>
+                `).join('') : '<div class="p-2 text-gray-500">No patients found.</div>';
+                document.getElementById('patientsList').scrollIntoView({ behavior: 'smooth' });
+            } catch (error) {
+                list.innerHTML = '<div class="p-2 text-red-500">Error fetching patients.</div>';
+                alert('Error fetching sorted patients: ' + error.message);
+            }
+        }
+
+        // Update Patient
+        async function updatePatient() {
+            const id = parseInt(document.getElementById('updatePatientId').value);
+            const patient = {
+                name: document.getElementById('updatePatientName').value,
+                age: parseInt(document.getElementById('updatePatientAge').value)
+            };
+            try {
+                const response = await fetch(`${API_URL}/patients/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(patient)
+                });
+                const result = await response.json();
+                alert(result.message || 'Patient Updated');
+                viewPatients(); // Auto-refresh patient list
+            } catch (error) {
+                alert('Error updating patient: ' + error.message);
+            }
+        }
+
+        // Delete Patient
+        async function deletePatient() {
+            const id = parseInt(document.getElementById('deletePatientId').value);
+            try {
+                const response = await fetch(`${API_URL}/patients/${id}`, {
+                    method: 'DELETE'
+                });
+                const result = await response.json();
+                alert(result.message || 'Patient Deleted');
+                viewPatients(); // Auto-refresh patient list
+            } catch (error) {
+                alert('Error deleting patient: ' + error.message);
+            }
+        }
+
+        // Add Doctor
+        async function addDoctor() {
+            const doctor = {
+                id: parseInt(document.getElementById('doctorId').value),
+                name: document.getElementById('doctorName').value,
+                contact: document.getElementById('doctorContact').value,
+                specialty: document.getElementById('doctorSpecialty').value
+            };
+            try {
+                const response = await fetch(`${API_URL}/doctors`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(doctor)
+                });
+                const result = await response.json();
+                alert(result.message || 'Doctor Added');
+                viewDoctors(); // Auto-refresh doctor list
+            } catch (error) {
+                alert('Error adding doctor: ' + error.message);
+            }
+        }
+
+        // View Doctors
+        async function viewDoctors() {
+            const list = document.getElementById('doctorsList');
+            list.innerHTML = '<div class="p-2 text-gray-500">Loading...</div>';
+            try {
+                const response = await fetch(`${API_URL}/doctors`);
+                const doctors = await response.json();
+                list.innerHTML = doctors.length ? doctors.map(d => `
+                    <div class="p-2 border-b">
+                        ID: ${d.id}, Name: ${d.name}, Contact: ${d.contact}, Specialty: ${d.specialty}
+                    </div>
+                `).join('') : '<div class="p-2 text-gray-500">No doctors found.</div>';
+                document.getElementById('doctorsList').scrollIntoView({ behavior: 'smooth' });
+            } catch (error) {
+                list.innerHTML = '<div class="p-2 text-red-500">Error fetching doctors.</div>';
+                alert('Error fetching doctors: ' + error.message);
+            }
+        }
+
+        // Recommend Doctor
+        async function recommendDoctor() {
+            const reason = document.getElementById('recommendReason').value;
+            const list = document.getElementById('recommendedDoctors');
+            list.innerHTML = '<div class="p-2 text-gray-500">Loading...</div>';
+            try {
+                const response = await fetch(`${API_URL}/doctors/recommend?reason=${encodeURIComponent(reason)}`);
+                const doctors = await response.json();
+                list.innerHTML = doctors.length ? doctors.map(d => `
+                    <div class="p-2 border-b">
+                        ID: ${d.id}, Name: ${d.name}, Contact: ${d.contact}, Specialty: ${d.specialty}
+                    </div>
+                `).join('') : '<div class="p-2 text-gray-500">No doctors found for this reason.</div>';
+                document.getElementById('recommendedDoctors').scrollIntoView({ behavior: 'smooth' });
+            } catch (error) {
+                list.innerHTML = '<div class="p-2 text-red-500">Error recommending doctor.</div>';
+                alert('Error recommending doctor: ' + error.message);
+            }
+        }
+
+        // Delete Doctor
+        async function deleteDoctor() {
+            const id = parseInt(document.getElementById('deleteDoctorId').value);
+            try {
+                const response = await fetch(`${API_URL}/doctors/${id}`, {
+                    method: 'DELETE'
+                });
+                const result = await response.json();
+                alert(result.message || 'Doctor Deleted');
+                viewDoctors(); // Auto-refresh doctor list
+            } catch (error) {
+                alert('Error deleting doctor: ' + error.message);
+            }
+        }
+
+        // Undo Last Action
+        async function undoAction() {
+            try {
+                const response = await fetch(`${API_URL}/undo`, { method: 'POST' });
+                const result = await response.json();
+                alert(result.message || 'Action Undone');
+                viewPatients(); // Refresh patient list
+                viewDoctors(); // Refresh doctor list
+            } catch (error) {
+                alert('Error undoing action: ' + error.message);
+            }
+        }
+    </script>
+</body>
+</html>
